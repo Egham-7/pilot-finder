@@ -19,7 +19,7 @@ export default function Home() {
       <HeroSection />
 
       {/* Features Section with Bento Grid */}
-      <section className="py-24 px-6">
+      <section id="features" className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <AnimatedShinyText className="text-lg mb-4">
