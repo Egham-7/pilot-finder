@@ -12,10 +12,10 @@ export default function StatsSection() {
             </h2>
             <div className="flex justify-center gap-3">
               <Button asChild size="lg">
-                <Link href="#">Find My Customers</Link>
+                <Link href="/sign-up">Find My Customers</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="#">See How It Works</Link>
+                <Link href="#features">See How It Works</Link>
               </Button>
             </div>
           </div>
