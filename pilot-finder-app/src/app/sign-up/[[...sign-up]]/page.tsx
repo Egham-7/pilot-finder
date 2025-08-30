@@ -12,6 +12,7 @@ export default function Page() {
           </p>
         </div>
         <SignUp
+          redirectUrl="/chat"
           appearance={{
             elements: {
               rootBox: "mx-auto",
