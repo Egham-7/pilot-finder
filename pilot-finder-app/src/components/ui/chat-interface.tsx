@@ -48,15 +48,14 @@ import {
   ToolOutput,
 } from "@/components/tool";
 import { AIVoiceInput } from "@/components/ui/ai-voice-input";
-import { 
-  ScrapeResult, 
-  CrawlResult, 
-  SearchResult, 
-  DeepResearchResult 
+import {
+  CrawlResult,
+  DeepResearchResult,
+  ScrapeResult,
+  SearchResult,
 } from "@/components/ui/firecrawl-results";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-
 
 interface ChatInterfaceProps {
   messages: UIMessage[];
@@ -414,24 +413,38 @@ export function ChatInterface({
                           };
 
                           // Check if this is a Firecrawl tool and render specialized component
-                          const firecrawlTools = ['tool-scrape', 'tool-crawl', 'tool-search', 'tool-deepResearch'];
-                          const isFirecrawlTool = firecrawlTools.includes(toolPart.type);
+                          const firecrawlTools = [
+                            "tool-scrape",
+                            "tool-crawl",
+                            "tool-search",
+                            "tool-deepResearch",
+                          ];
+                          const isFirecrawlTool = firecrawlTools.includes(
+                            toolPart.type,
+                          );
 
-                          if (isFirecrawlTool && toolPart.output && typeof toolPart.output === 'object') {
+                          if (
+                            isFirecrawlTool &&
+                            toolPart.output &&
+                            typeof toolPart.output === "object"
+                          ) {
                             return (
-                              <div key={`${message.id}-tool-${i}`} className="mb-4">
+                              <div
+                                key={`${message.id}-tool-${i}`}
+                                className="mb-4"
+                              >
                                 {(() => {
                                   const output = toolPart.output as any;
-                                  if (toolPart.type === 'tool-deepResearch') {
+                                  if (toolPart.type === "tool-deepResearch") {
                                     return <DeepResearchResult data={output} />;
                                   }
-                                  if (toolPart.type === 'tool-scrape') {
+                                  if (toolPart.type === "tool-scrape") {
                                     return <ScrapeResult data={output} />;
                                   }
-                                  if (toolPart.type === 'tool-crawl') {
+                                  if (toolPart.type === "tool-crawl") {
                                     return <CrawlResult data={output} />;
                                   }
-                                  if (toolPart.type === 'tool-search') {
+                                  if (toolPart.type === "tool-search") {
                                     return <SearchResult data={output} />;
                                   }
                                   return null;
@@ -454,13 +467,18 @@ export function ChatInterface({
                                 <ToolInput input={toolPart.input} />
                                 <ToolOutput
                                   output={
-                                    toolPart.output && typeof toolPart.output === 'object'
-                                      ? (
-                                          <pre className="text-xs whitespace-pre-wrap overflow-auto max-h-48">
-                                            {JSON.stringify(toolPart.output, null, 2)}
-                                          </pre>
-                                        )
-                                      : toolPart.output as React.ReactNode
+                                    toolPart.output &&
+                                    typeof toolPart.output === "object" ? (
+                                      <pre className="text-xs whitespace-pre-wrap overflow-auto max-h-48">
+                                        {JSON.stringify(
+                                          toolPart.output,
+                                          null,
+                                          2,
+                                        )}
+                                      </pre>
+                                    ) : (
+                                      (toolPart.output as React.ReactNode)
+                                    )
                                   }
                                   errorText={toolPart.errorText}
                                 />

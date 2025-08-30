@@ -1,6 +1,6 @@
 import { openai } from "@ai-sdk/openai";
-import { convertToModelMessages, stepCountIs, streamText, tool } from "ai";
 import Firecrawl from "@mendable/firecrawl-js";
+import { convertToModelMessages, stepCountIs, streamText, tool } from "ai";
 import { z } from "zod";
 
 export const maxDuration = 30;
@@ -211,9 +211,8 @@ Keep responses action-oriented and focused on finding actual humans who need the
 
               console.log("📊 Search API response:", {
                 responseType: typeof response,
-                hasWeb: response && response.web ? "Yes" : "No",
-                webDataLength:
-                  response && response.web ? response.web.length : "N/A",
+                hasWeb: response?.web ? "Yes" : "No",
+                webDataLength: response?.web ? response.web.length : "N/A",
               });
 
               // Check if response has web results (actual Firecrawl format)
@@ -288,11 +287,10 @@ Keep responses action-oriented and focused on finding actual humans who need the
 
               console.log("📊 Deep research search response:", {
                 hasResponse: !!searchResponse,
-                hasWeb: searchResponse && searchResponse.web ? "Yes" : "No",
-                webDataLength:
-                  searchResponse && searchResponse.web
-                    ? searchResponse.web.length
-                    : "N/A",
+                hasWeb: searchResponse?.web ? "Yes" : "No",
+                webDataLength: searchResponse?.web
+                  ? searchResponse.web.length
+                  : "N/A",
               });
 
               if (

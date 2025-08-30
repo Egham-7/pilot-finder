@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Globe, Search, FileText, Users } from "lucide-react";
+import { ExternalLink, FileText, Globe, Search, Users } from "lucide-react";
 import { Badge } from "./badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./card";
 import { ScrollArea } from "./scroll-area";
@@ -68,7 +68,7 @@ export function ScrapeResult({ data }: ScrapeResultProps) {
             <ScrollArea className="h-32 w-full rounded border bg-muted/30 p-3">
               <p className="text-xs leading-relaxed whitespace-pre-wrap">
                 {data.content.length > 1000
-                  ? data.content.substring(0, 1000) + "..."
+                  ? `${data.content.substring(0, 1000)}...`
                   : data.content}
               </p>
             </ScrollArea>
@@ -402,4 +402,3 @@ export function DeepResearchResult({ data }: DeepResearchResultProps) {
     </Card>
   );
 }
-
