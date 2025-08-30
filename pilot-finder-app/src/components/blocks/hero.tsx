@@ -346,8 +346,8 @@ const HeroHeader = () => {
                       size="sm"
                       className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
                     >
-                      <Link href="/dashboard">
-                        <span>Dashboard</span>
+                      <Link href="/chat">
+                        <span>Chat</span>
                       </Link>
                     </Button>
                     <UserButton afterSignOutUrl="/" />
@@ -413,9 +413,9 @@ const HeroCTAButtons = () => {
     >
       <div key={1} className="bg-foreground/10 rounded-[14px] border p-0.5">
         <Button asChild size="lg" className="rounded-xl px-5 text-base">
-          <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
+          <Link href={isSignedIn ? "/chat" : "/sign-up"}>
             <span className="text-nowrap">
-              {isSignedIn ? "Go to Dashboard" : "Find My Customers"}
+              {isSignedIn ? "Go to Chat" : "Find My Customers"}
             </span>
           </Link>
         </Button>

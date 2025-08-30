@@ -48,8 +48,15 @@ import {
   ToolOutput,
 } from "@/components/tool";
 import { AIVoiceInput } from "@/components/ui/ai-voice-input";
+import { 
+  ScrapeResult, 
+  CrawlResult, 
+  SearchResult, 
+  DeepResearchResult 
+} from "@/components/ui/firecrawl-results";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+
 
 interface ChatInterfaceProps {
   messages: UIMessage[];
@@ -405,6 +412,35 @@ export function ChatInterface({
                             errorText?: string;
                             providerExecuted?: boolean;
                           };
+
+                          // Check if this is a Firecrawl tool and render specialized component
+                          const firecrawlTools = ['tool-scrape', 'tool-crawl', 'tool-search', 'tool-deepResearch'];
+                          const isFirecrawlTool = firecrawlTools.includes(toolPart.type);
+
+                          if (isFirecrawlTool && toolPart.output && typeof toolPart.output === 'object') {
+                            return (
+                              <div key={`${message.id}-tool-${i}`} className="mb-4">
+                                {(() => {
+                                  const output = toolPart.output as any;
+                                  if (toolPart.type === 'tool-deepResearch') {
+                                    return <DeepResearchResult data={output} />;
+                                  }
+                                  if (toolPart.type === 'tool-scrape') {
+                                    return <ScrapeResult data={output} />;
+                                  }
+                                  if (toolPart.type === 'tool-crawl') {
+                                    return <CrawlResult data={output} />;
+                                  }
+                                  if (toolPart.type === 'tool-search') {
+                                    return <SearchResult data={output} />;
+                                  }
+                                  return null;
+                                })()}
+                              </div>
+                            );
+                          }
+
+                          // Default tool rendering for non-Firecrawl tools
                           return (
                             <Tool
                               key={`${message.id}-tool-${i}`}
@@ -417,7 +453,15 @@ export function ChatInterface({
                               <ToolContent>
                                 <ToolInput input={toolPart.input} />
                                 <ToolOutput
-                                  output={toolPart.output as React.ReactNode}
+                                  output={
+                                    toolPart.output && typeof toolPart.output === 'object'
+                                      ? (
+                                          <pre className="text-xs whitespace-pre-wrap overflow-auto max-h-48">
+                                            {JSON.stringify(toolPart.output, null, 2)}
+                                          </pre>
+                                        )
+                                      : toolPart.output as React.ReactNode
+                                  }
                                   errorText={toolPart.errorText}
                                 />
                               </ToolContent>
