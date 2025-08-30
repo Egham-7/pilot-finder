@@ -155,9 +155,9 @@ function AnimatedGroup({
       variants={containerVariants}
       className={cn(className)}
     >
-      {React.Children.map(children, (child, index) => (
+      {React.Children.toArray(children).map((child) => (
         <motion.div
-          key={`animated-group-item-${index}`}
+          key={(child as React.ReactElement).key || Math.random()}
           variants={itemVariants}
         >
           {child}

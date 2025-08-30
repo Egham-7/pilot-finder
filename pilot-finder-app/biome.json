@@ -30,6 +30,9 @@
       },
       "correctness": {
         "useUniqueElementIds": "off"
+      },
+      "performance": {
+        "noImgElement": "error"
       }
     }
   },
