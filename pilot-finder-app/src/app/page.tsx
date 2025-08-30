@@ -1,103 +1,147 @@
-import Image from "next/image";
+import {
+  AlertTriangle,
+  Bot,
+  MessageSquare,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
+} from "lucide-react";
+import { HeroSection } from "@/components/blocks/hero";
+import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
+import { BentoCard, BentoGrid } from "@/components/ui/bento-grid";
+import StatsSection from "@/components/ui/call-to-action";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Hero Section */}
+      <HeroSection />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      {/* Features Section with Bento Grid */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <AnimatedShinyText className="text-lg mb-4">
+              🤖 AI-Powered Customer Discovery
+            </AnimatedShinyText>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+              Find Your Pilot Customers Before They Find You
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Most customer discovery tools assume you know who your customers
+              are. We don't. Our AI agents scour the internet to find people
+              complaining about the exact problem you're solving—or tell you the
+              hard truth about pivoting.
+            </p>
+          </div>
+
+          <BentoGrid className="max-w-6xl mx-auto">
+            <BentoCard
+              name="AI Problem Hunters"
+              className="col-span-3 lg:col-span-2"
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,hsl(var(--primary)/0.3),transparent_50%)]" />
+                </div>
+              }
+              Icon={Bot}
+              description="Our AI agents continuously scan Reddit, Twitter, forums, and review sites to find real people actively complaining about problems your startup claims to solve."
+              href="/ai-discovery"
+              cta="See AI in Action"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+            <BentoCard
+              name="Brutal Honesty Mode"
+              className="col-span-3 lg:col-span-1"
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-destructive/20 via-transparent to-chart-5/20" />
+              }
+              Icon={AlertTriangle}
+              description="We're not your cheerleader. If we can't find customers complaining about your problem, we'll tell you exactly why—and where to pivot."
+              href="/honesty"
+              cta="Get Hard Truth"
+            />
+
+            <BentoCard
+              name="Real-Time Complaints"
+              className="col-span-3 lg:col-span-1"
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-chart-1/20 via-transparent to-chart-4/20" />
+              }
+              Icon={MessageSquare}
+              description="Live feed of people expressing pain points related to your solution across 50+ platforms, updated every hour."
+              href="/complaints"
+              cta="View Live Feed"
+            />
+
+            <BentoCard
+              name="Pain Point Mapping"
+              className="col-span-3 lg:col-span-2"
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-chart-2/20 via-transparent to-chart-3/20" />
+              }
+              Icon={Target}
+              description="Visual maps showing where complaints cluster geographically and demographically. Identify underserved markets and customer segments you never knew existed."
+              href="/mapping"
+              cta="Explore Maps"
+            />
+
+            <BentoCard
+              name="Pivot Recommendations"
+              className="col-span-3 lg:col-span-1"
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-chart-4/20 via-transparent to-chart-5/20" />
+              }
+              Icon={TrendingUp}
+              description="When your current idea isn't working, we analyze adjacent problems with more vocal complainers and suggest pivot opportunities."
+              href="/pivots"
+              cta="Explore Pivots"
+            />
+
+            <BentoCard
+              name="Competitor Reality Check"
+              className="col-span-3 lg:col-span-2"
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-transparent to-secondary/20" />
+              }
+              Icon={Zap}
+              description="See what people really think about your competitors. Unfiltered complaints reveal gaps in the market that surveys would never capture."
+              href="/competitors"
+              cta="Check Competition"
+            />
+
+            <BentoCard
+              name="Early Adopter Profiles"
+              className="col-span-3 lg:col-span-1"
+              background={
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-chart-1/20" />
+              }
+              Icon={Users}
+              description="Detailed profiles of the most vocal complainers—your potential pilot customers who are desperate for a solution."
+              href="/profiles"
+              cta="Meet Customers"
+            />
+          </BentoGrid>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 px-6 bg-gradient-to-t from-muted/50 to-transparent">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="bg-gradient-to-r from-destructive/10 via-chart-5/10 to-chart-4/10 border border-destructive/20 rounded-2xl p-8 mb-8">
+            <AnimatedShinyText className="text-2xl mb-4 font-semibold text-destructive">
+              ⚠️ Warning: We Don't Sugarcoat Reality
+            </AnimatedShinyText>
+            <p className="text-muted-foreground text-lg">
+              Unlike other tools that validate your assumptions, we challenge
+              them. Prepare for uncomfortable truths about your market.
+            </p>
+          </div>
+
+          <StatsSection />
+        </div>
+      </section>
     </div>
   );
 }
