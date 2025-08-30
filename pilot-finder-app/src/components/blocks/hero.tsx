@@ -1,10 +1,10 @@
 "use client";
 
+import { UserButton, useAuth } from "@clerk/nextjs";
 import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useAuth, UserButton } from "@clerk/nextjs";
 import { AnimatedGroup } from "@/components/ui/animated-group";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -411,15 +411,8 @@ const HeroCTAButtons = () => {
       }}
       className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row"
     >
-      <div
-        key={1}
-        className="bg-foreground/10 rounded-[14px] border p-0.5"
-      >
-        <Button
-          asChild
-          size="lg"
-          className="rounded-xl px-5 text-base"
-        >
+      <div key={1} className="bg-foreground/10 rounded-[14px] border p-0.5">
+        <Button asChild size="lg" className="rounded-xl px-5 text-base">
           <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
             <span className="text-nowrap">
               {isSignedIn ? "Go to Dashboard" : "Find My Customers"}

@@ -10,17 +10,19 @@ export default function Page() {
             Sign in to continue your customer discovery journey
           </p>
         </div>
-        <SignIn 
+        <SignIn
           appearance={{
             elements: {
               rootBox: "mx-auto",
               card: "shadow-2xl border border-border bg-card",
               headerTitle: "text-foreground",
               headerSubtitle: "text-muted-foreground",
-              socialButtonsBlockButton: "border border-border hover:bg-muted/50",
-              formButtonPrimary: "bg-primary hover:bg-primary/90 text-primary-foreground",
+              socialButtonsBlockButton:
+                "border border-border hover:bg-muted/50",
+              formButtonPrimary:
+                "bg-primary hover:bg-primary/90 text-primary-foreground",
               footerActionLink: "text-primary hover:text-primary/80",
-            }
+            },
           }}
         />
       </div>
