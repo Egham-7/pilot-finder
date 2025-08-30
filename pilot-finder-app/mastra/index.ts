@@ -1,10 +1,9 @@
+import { Mastra } from "@mastra/core/mastra";
+import { PinoLogger } from "@mastra/loggers";
+import { LibSQLStore } from "@mastra/libsql";
 
-import { Mastra } from '@mastra/core/mastra';
-import { PinoLogger } from '@mastra/loggers';
-import { LibSQLStore } from '@mastra/libsql';
-
-import { weatherAgent } from './agents/weather-agent';
-import { onboardingAgent } from './agents/onboarding-agent';
+import { weatherAgent } from "./agents/weather-agent";
+import { onboardingAgent } from "./agents/onboarding-agent";
 
 export const mastra = new Mastra({
   agents: { weatherAgent, onboardingAgent },
@@ -13,7 +12,7 @@ export const mastra = new Mastra({
     url: ":memory:",
   }),
   logger: new PinoLogger({
-    name: 'Mastra',
-    level: 'info',
+    name: "Mastra",
+    level: "info",
   }),
 });
