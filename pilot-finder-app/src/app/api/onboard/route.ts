@@ -111,14 +111,17 @@ async function processOnboardingSession(
       Business Name: ${businessName}
       Business Description: ${businessDescription}
       
-      Please:
-      1. Assess market viability (viable/oversaturated/pivot_needed)
-      2. Research competitors and market trends
-      3. Find potential pilot customers and their pain points
-      4. Provide brutal honest assessment and recommendations
-      5. Generate specific pilot customer leads with outreach strategies
+      IMPORTANT: You MUST use the available Firecrawl tools to research this business. Please:
       
-      Be thorough and use the research tools to gather real market data.
+      1. Use firecrawlSearch_firecrawl_search to search for competitors in this space
+      2. Use firecrawlSearch_firecrawl_search to find customer complaints and pain points
+      3. Use firecrawlSearch_firecrawl_search to identify potential pilot customers
+      4. Assess market viability based on your research findings
+      5. Provide brutal honest assessment and recommendations with specific data
+      
+      Search for terms related to: "${businessDescription}" competitors, customers, problems, solutions
+      
+      Do not provide generic advice - use the tools to gather real market data first.
     `;
 
     const response = await onboardingAgent.generate(prompt);
