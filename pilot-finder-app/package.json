@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@ai-sdk/openai": "^1.0.0",
+		"@clerk/nextjs": "^6.31.6",
 		"@mastra/core": "^0.15.2",
 		"@mastra/libsql": "^0.13.7",
 		"@mastra/loggers": "^0.10.9",

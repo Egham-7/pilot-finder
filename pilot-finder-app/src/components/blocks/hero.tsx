@@ -4,6 +4,7 @@ import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuth, UserButton } from "@clerk/nextjs";
 import { AnimatedGroup } from "@/components/ui/animated-group";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -117,46 +118,7 @@ export function HeroSection() {
                   </p>
                 </AnimatedGroup>
 
-                <AnimatedGroup
-                  variants={{
-                    container: {
-                      visible: {
-                        transition: {
-                          staggerChildren: 0.05,
-                          delayChildren: 0.75,
-                        },
-                      },
-                    },
-                    ...transitionVariants,
-                  }}
-                  className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row"
-                >
-                  <div
-                    key={1}
-                    className="bg-foreground/10 rounded-[14px] border p-0.5"
-                  >
-                    <Button
-                      asChild
-                      size="lg"
-                      className="rounded-xl px-5 text-base"
-                    >
-                      <Link href="#link">
-                        <span className="text-nowrap">Find My Customers</span>
-                      </Link>
-                    </Button>
-                  </div>
-                  <Button
-                    key={2}
-                    asChild
-                    size="lg"
-                    variant="ghost"
-                    className="h-10.5 rounded-xl px-5"
-                  >
-                    <Link href="#link">
-                      <span className="text-nowrap">See How It Works</span>
-                    </Link>
-                  </Button>
-                </AnimatedGroup>
+                <HeroCTAButtons />
               </div>
             </div>
 
@@ -303,6 +265,7 @@ const menuItems = [
 const HeroHeader = () => {
   const [menuState, setMenuState] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -376,40 +339,106 @@ const HeroHeader = () => {
                 </ul>
               </div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className={cn(isScrolled && "lg:hidden")}
-                >
-                  <Link href="#">
-                    <span>Login</span>
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className={cn(isScrolled && "lg:hidden")}
-                >
-                  <Link href="#">
-                    <span>Sign Up</span>
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
-                >
-                  <Link href="#">
-                    <span>Get Started</span>
-                  </Link>
-                </Button>
+                {isSignedIn ? (
+                  <div className="flex items-center gap-3">
+                    <Button
+                      asChild
+                      size="sm"
+                      className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
+                    >
+                      <Link href="/dashboard">
+                        <span>Dashboard</span>
+                      </Link>
+                    </Button>
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                ) : (
+                  <>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className={cn(isScrolled && "lg:hidden")}
+                    >
+                      <Link href="/sign-in">
+                        <span>Login</span>
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      size="sm"
+                      className={cn(isScrolled && "lg:hidden")}
+                    >
+                      <Link href="/sign-up">
+                        <span>Sign Up</span>
+                      </Link>
+                    </Button>
+                    <Button
+                      asChild
+                      size="sm"
+                      className={cn(isScrolled ? "lg:inline-flex" : "hidden")}
+                    >
+                      <Link href="/sign-up">
+                        <span>Get Started</span>
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
         </div>
       </nav>
     </header>
+  );
+};
+
+const HeroCTAButtons = () => {
+  const { isSignedIn } = useAuth();
+
+  return (
+    <AnimatedGroup
+      variants={{
+        container: {
+          visible: {
+            transition: {
+              staggerChildren: 0.05,
+              delayChildren: 0.75,
+            },
+          },
+        },
+        ...transitionVariants,
+      }}
+      className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row"
+    >
+      <div
+        key={1}
+        className="bg-foreground/10 rounded-[14px] border p-0.5"
+      >
+        <Button
+          asChild
+          size="lg"
+          className="rounded-xl px-5 text-base"
+        >
+          <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
+            <span className="text-nowrap">
+              {isSignedIn ? "Go to Dashboard" : "Find My Customers"}
+            </span>
+          </Link>
+        </Button>
+      </div>
+      <Button
+        key={2}
+        asChild
+        size="lg"
+        variant="ghost"
+        className="h-10.5 rounded-xl px-5"
+      >
+        <Link href="#features">
+          <span className="text-nowrap">See How It Works</span>
+        </Link>
+      </Button>
+    </AnimatedGroup>
   );
 };
 
