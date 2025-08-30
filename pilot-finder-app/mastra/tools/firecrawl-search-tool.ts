@@ -1,14 +1,12 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import FirecrawlApp from '@mendable/firecrawl-js';
 
-const firecrawl = new FirecrawlApp({
-  apiKey: process.env.FIRECRAWL_API_KEY,
-});
+const KLAVIS_MCP_ENDPOINT = process.env.KLAVIS_MCP_ENDPOINT;
+const KLAVIS_API_KEY = process.env.KLAVIS_API_KEY;
 
 export const firecrawlSearchTool = createTool({
   id: 'firecrawl-web-search',
-  description: 'Search the web for specific information using Firecrawl',
+  description: 'Search the web for specific information using KlavisAI Firecrawl MCP server',
   inputSchema: z.object({
     query: z.string().describe('Search query to find relevant web content'),
     limit: z.number().optional().describe('Maximum number of results to return (default: 5)'),
@@ -25,22 +23,51 @@ export const firecrawlSearchTool = createTool({
   }),
   execute: async ({ context }) => {
     try {
-      const searchResults = await firecrawl.search(context.query, {
-        limit: context.limit || 5,
-      });
-
-      if (!searchResults || !Array.isArray(searchResults)) {
-        throw new Error('Search failed');
+      if (!KLAVIS_MCP_ENDPOINT || !KLAVIS_API_KEY) {
+        throw new Error('KlavisAI MCP endpoint or API key not configured');
       }
 
-      const results = searchResults.map((result: any) => ({
+      // Call KlavisAI MCP server for web search
+      const response = await fetch(KLAVIS_MCP_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${KLAVIS_API_KEY}`,
+        },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'tools/call',
+          params: {
+            name: 'firecrawl_web_search',
+            arguments: {
+              query: context.query,
+              limit: context.limit || 5,
+            },
+          },
+          id: Date.now(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`KlavisAI MCP server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(`MCP error: ${data.error.message}`);
+      }
+
+      const searchResults = data.result?.content || [];
+
+      const results = Array.isArray(searchResults) ? searchResults.map((result: any) => ({
         url: result.url || '',
         title: result.title || result.metadata?.title || 'No title',
         content: result.content || result.markdown || 'No content available',
         snippet: (result.content || result.markdown) ? 
           (result.content || result.markdown).substring(0, 200) + '...' : 
           'No snippet available',
-      }));
+      })) : [];
 
       return {
         results,
@@ -48,7 +75,7 @@ export const firecrawlSearchTool = createTool({
         totalResults: results.length,
       };
     } catch (error) {
-      console.error('Firecrawl search error:', error);
+      console.error('KlavisAI Firecrawl search error:', error);
       return {
         results: [],
         query: context.query,

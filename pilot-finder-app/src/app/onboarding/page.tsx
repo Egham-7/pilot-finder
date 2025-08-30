@@ -2,18 +2,47 @@
 
 import { useState } from "react";
 import { WelcomeModal } from "@/components/ui/welcome-modal";
+import { useRouter } from "next/navigation";
 
 export default function OnboardingPage() {
   const [businessName, setBusinessName] = useState("");
   const [businessDescription, setBusinessDescription] = useState("");
   const [isOpen, setIsOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!businessName.trim() || !businessDescription.trim()) return;
     
-    // TODO: Handle form submission
-    console.log({ businessName, businessDescription });
-    setIsOpen(false);
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch('/api/onboard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          businessName: businessName.trim(),
+          businessDescription: businessDescription.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Redirect to results page with session ID
+        router.push(`/results?sessionId=${data.sessionId}`);
+      } else {
+        console.error('Onboarding failed:', data.error);
+        alert('Failed to start analysis. Please try again.');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Network error. Please check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -22,7 +51,7 @@ export default function OnboardingPage() {
       onOpenChange={setIsOpen}
       title="Welcome to PilotFinder"
       description="Tell us about your business to get started with AI-powered customer discovery"
-      mainActionText="Start Pilot Discovery"
+      mainActionText={isLoading ? "Analyzing..." : "Start Pilot Discovery"}
       onMainActionClick={handleSubmit}
       showDontShowAgain={false}
     >

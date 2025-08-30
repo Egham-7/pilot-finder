@@ -1,14 +1,12 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
-import FirecrawlApp from '@mendable/firecrawl-js';
 
-const firecrawl = new FirecrawlApp({
-  apiKey: process.env.FIRECRAWL_API_KEY,
-});
+const KLAVIS_MCP_ENDPOINT = process.env.KLAVIS_MCP_ENDPOINT;
+const KLAVIS_API_KEY = process.env.KLAVIS_API_KEY;
 
 export const firecrawlResearchTool = createTool({
   id: 'firecrawl-deep-research',
-  description: 'Perform deep research on a topic using Firecrawl to gather comprehensive information from multiple sources',
+  description: 'Perform deep research on a topic using KlavisAI Firecrawl MCP server to gather comprehensive information from multiple sources',
   inputSchema: z.object({
     topic: z.string().describe('The topic or business area to research'),
     query: z.string().describe('Specific research query or question'),
@@ -25,21 +23,51 @@ export const firecrawlResearchTool = createTool({
   }),
   execute: async ({ context }) => {
     try {
-      // Use Firecrawl's search functionality to find relevant sources
-      const searchResults = await firecrawl.search(`${context.topic} ${context.query}`, {
-        limit: 10,
-      });
-
-      if (!searchResults || !Array.isArray(searchResults)) {
-        throw new Error('Failed to perform research');
+      if (!KLAVIS_MCP_ENDPOINT || !KLAVIS_API_KEY) {
+        throw new Error('KlavisAI MCP endpoint or API key not configured');
       }
 
-      const results = searchResults.map((result: any) => ({
+      const searchQuery = `${context.topic} ${context.query}`;
+      
+      // Call KlavisAI MCP server for deep research
+      const response = await fetch(KLAVIS_MCP_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${KLAVIS_API_KEY}`,
+        },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          method: 'tools/call',
+          params: {
+            name: 'firecrawl_deep_research',
+            arguments: {
+              query: searchQuery,
+              limit: 10,
+            },
+          },
+          id: Date.now(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`KlavisAI MCP server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(`MCP error: ${data.error.message}`);
+      }
+
+      const searchResults = data.result?.content || [];
+      
+      const results = Array.isArray(searchResults) ? searchResults.map((result: any) => ({
         url: result.url || '',
         title: result.title || result.metadata?.title || 'No title',
         content: result.content || result.markdown || 'No content available',
         metadata: result.metadata || {},
-      }));
+      })) : [];
 
       // Create a summary of findings
       const summary = `Research on "${context.topic}" with query "${context.query}" found ${results.length} relevant sources covering various aspects of the topic.`;
@@ -50,7 +78,7 @@ export const firecrawlResearchTool = createTool({
         totalResults: results.length,
       };
     } catch (error) {
-      console.error('Firecrawl research error:', error);
+      console.error('KlavisAI Firecrawl research error:', error);
       return {
         results: [],
         summary: `Research failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
