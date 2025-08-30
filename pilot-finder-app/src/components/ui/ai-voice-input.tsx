@@ -73,35 +73,38 @@ export function AIVoiceInput({
     };
   }, [isDemo, demoInterval]);
 
-  const transcribeAudio = useCallback(async (audioBlob: Blob) => {
-    try {
-      const formData = new FormData();
-      formData.append("audio", audioBlob, "recording.webm");
+  const transcribeAudio = useCallback(
+    async (audioBlob: Blob) => {
+      try {
+        const formData = new FormData();
+        formData.append("audio", audioBlob, "recording.webm");
 
-      const response = await fetch("/api/transcribe", {
-        method: "POST",
-        body: formData,
-      });
+        const response = await fetch("/api/transcribe", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (!response.ok) {
-        throw new Error(`Transcription failed: ${response.statusText}`);
+        if (!response.ok) {
+          throw new Error(`Transcription failed: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+
+        if (result.text) {
+          onTranscription?.(result.text);
+        } else {
+          onError?.("No transcription received");
+        }
+      } catch (error) {
+        console.error("Transcription error:", error);
+        onError?.("Failed to transcribe audio");
+      } finally {
+        setIsProcessing(false);
+        setTime(0);
       }
-
-      const result = await response.json();
-
-      if (result.text) {
-        onTranscription?.(result.text);
-      } else {
-        onError?.("No transcription received");
-      }
-    } catch (error) {
-      console.error("Transcription error:", error);
-      onError?.("Failed to transcribe audio");
-    } finally {
-      setIsProcessing(false);
-      setTime(0);
-    }
-  }, [onTranscription, onError]);
+    },
+    [onTranscription, onError],
+  );
 
   const startRecording = useCallback(async () => {
     try {
@@ -258,9 +261,9 @@ export function AIVoiceInput({
         </span>
 
         <div className="h-4 w-64 flex items-center justify-center gap-0.5">
-          {[...Array(visualizerBars)].map((_, i) => (
+          {Array.from({ length: visualizerBars }, (_, i) => (
             <div
-              key={`visualizer-bar-${i}`}
+              key={`bar-${i}-${visualizerBars}`}
               className={cn(
                 "w-0.5 rounded-full transition-all duration-300",
                 isActive

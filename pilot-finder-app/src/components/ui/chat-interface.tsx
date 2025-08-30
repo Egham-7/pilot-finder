@@ -14,6 +14,7 @@ import {
   X,
   XIcon,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Action, Actions } from "@/components/actions";
@@ -390,7 +391,20 @@ export function ChatInterface({
                         }
 
                         if (part.type.startsWith("tool-")) {
-                          const toolPart = part as any; // Type assertion for tool parts
+                          // Type guard to check if this is a ToolUIPart
+                          const toolPart = part as {
+                            type: `tool-${string}`;
+                            toolCallId: string;
+                            state:
+                              | "input-streaming"
+                              | "input-available"
+                              | "output-available"
+                              | "output-error";
+                            input?: unknown;
+                            output?: unknown;
+                            errorText?: string;
+                            providerExecuted?: boolean;
+                          };
                           return (
                             <Tool
                               key={`${message.id}-tool-${i}`}
@@ -401,10 +415,10 @@ export function ChatInterface({
                                 state={toolPart.state || "output-available"}
                               />
                               <ToolContent>
-                                <ToolInput input={toolPart.input || {}} />
+                                <ToolInput input={toolPart.input} />
                                 <ToolOutput
-                                  output={toolPart.output || null}
-                                  errorText={toolPart.errorText || null}
+                                  output={toolPart.output as React.ReactNode}
+                                  errorText={toolPart.errorText}
                                 />
                               </ToolContent>
                             </Tool>
@@ -416,11 +430,13 @@ export function ChatInterface({
                           part.mediaType?.startsWith("image/")
                         ) {
                           return (
-                            <img
+                            <Image
                               key={`${message.id}-file-${i}`}
                               src={part.url}
                               alt={part.filename || "Attached image"}
                               className="max-w-sm rounded-lg border border-border/50 my-2"
+                              width={400}
+                              height={300}
                             />
                           );
                         }

@@ -28,7 +28,9 @@ export default function ChatPage() {
     if (files && files.length > 0) {
       // Create a DataTransfer object to build a FileList
       const dt = new DataTransfer();
-      files.forEach((file) => dt.items.add(file));
+      for (const file of files) {
+        dt.items.add(file);
+      }
       setInitialFiles(dt.files);
     }
 
